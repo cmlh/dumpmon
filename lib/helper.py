@@ -11,14 +11,14 @@ import logging
 
 
 r = requests.Session()
-
-
+    
 def download(url, headers=None):
     if not headers:
         headers = None
     if headers:
         r.headers.update(headers)
     try:
+        logging.info(url)
         response = r.get(url).text
     except requests.ConnectionError:
         logging.warn('[!] Critical Error - Cannot connect to site')
@@ -45,6 +45,7 @@ def build_tweet(paste):
     '''
     tweet = None
     if paste.match():
+        logging.info('Paste Matched')
         tweet = paste.url
         if paste.type == 'db_dump':
             if paste.num_emails > 0:
@@ -63,7 +64,7 @@ def build_tweet(paste):
             tweet += ' Possible SSH private key'
         elif paste.type == 'honeypot':
             tweet += ' Dionaea Honeypot Log'
-        tweet += ' #infoleak'
+        tweet += ' #infosec #dataleak'
     if paste.num_emails > 0:
         print(paste.emails)
     return tweet

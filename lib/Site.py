@@ -5,10 +5,11 @@ import re
 from pymongo import MongoClient
 from requests import ConnectionError
 from twitter import TwitterError
-from settings import USE_DB, DB_HOST, DB_PORT
+from settings import USE_DB, DB_HOST, DB_PORT, SEEN_DEQUE_LEN
 import logging
 import helper
 
+from collections import deque
 
 class Site(object):
     '''
@@ -31,19 +32,32 @@ class Site(object):
     # that I could find... So, I decided to implement my own queue with a few
     # changes
     def __init__(self, queue=None):
+        
+        # the double ended queue is used to check the last n URLs to see if they have been processed, since the URLs are random strings.
+        self.seen = deque(maxlen=SEEN_DEQUE_LEN)
+        
         if queue is None:
             self.queue = []
         if USE_DB:
             # Lazily create the db and collection if not present
             self.db_client = MongoClient(DB_HOST, DB_PORT).paste_db.pastes
 
-
+    def addSeen(self,item):
+        self.seen.append(item)
+        #logging.info('[@] Site deque len %i'%(len(self.seen)))
+        
+    def hasSeen(self,item):
+        res = item in self.seen
+        #logging.info('[@] URL Seen %s %s'%(item.url,res))
+        return res
+        
     def empty(self):
         return len(self.queue) == 0
 
     def get(self):
         if not self.empty():
             result = self.queue[0]
+            self.addSeen(result)
             del self.queue[0]
         else:
             result = None
@@ -67,10 +81,24 @@ class Site(object):
     def list(self):
         print('\n'.join(url for url in self.queue))
 
+    def parse(self):
+        #override this
+        pass
+    
+    def update(self):
+        #override this
+        pass
+    
+    def get_paste_text(self):
+        #override this
+        pass
+    
     def monitor(self, bot, t_lock):
         self.update()
         while(1):
             while not self.empty():
+                #need to sleep to avoid the ban....
+                time.sleep(self.sleep/4)
                 paste = self.get()
                 self.ref_id = paste.id
                 logging.info('[*] Checking ' + paste.url)
@@ -92,9 +120,10 @@ class Site(object):
                                 'url' : paste.url
                                })
                         try:
+                            logging.debug('[++++++++++++] Tweet %s'%(tweet))
                             bot.statuses.update(status=tweet)
-                        except TwitterError:
-                            pass
+                        except TwitterError as e:
+                            logging.debug('[!] TwitterError %s'%(str(e)))
             self.update()
             while self.empty():
                 logging.debug('[*] No results... sleeping')

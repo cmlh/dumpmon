@@ -10,11 +10,9 @@ import logging
 
 class PastebinPaste(Paste):
     def __init__(self, id):
-        self.id = id
+        super(PastebinPaste, self).__init__(id)
         self.headers = None
         self.url = 'http://pastebin.com/raw.php?i=' + self.id
-        super(PastebinPaste, self).__init__()
-
 
 class Pastebin(Site):
     def __init__(self, last_id=None):
@@ -24,23 +22,22 @@ class Pastebin(Site):
         self.BASE_URL = 'http://pastebin.com'
         self.sleep = SLEEP_PASTEBIN
         super(Pastebin, self).__init__()
-
+        
+    def parse(self):
+        return BeautifulSoup(helper.download(self.BASE_URL + '/archive')).find_all(
+            lambda tag: tag.name == 'td' and tag.a and '/archive/' not in tag.a['href'] and tag.a['href'][1:])        
+        
     def update(self):
         '''update(self) - Fill Queue with new Pastebin IDs'''
         logging.info('Retrieving Pastebin ID\'s')
-        results = BeautifulSoup(helper.download(self.BASE_URL + '/archive')).find_all(
-            lambda tag: tag.name == 'td' and tag.a and '/archive/' not in tag.a['href'] and tag.a['href'][1:])
-        new_pastes = []
-        if not self.ref_id:
-            results = results[:60]
-        for entry in results:
+        i=0            
+        for entry in self.parse():
             paste = PastebinPaste(entry.a['href'][1:])
-            # Check to see if we found our last checked URL
-            if paste.id == self.ref_id:
-                break
-            new_pastes.append(paste)
-        for entry in new_pastes[::-1]:
-            logging.info('Adding URL: ' + entry.url)
-            self.put(entry)
+            if not self.hasSeen(paste):
+                #logging.info('Adding URL: ' + paste.url)
+                i+=1
+                self.put(paste)
+        logging.info('Pastebin Added URLs: ' + str(i))
+           
     def get_paste_text(self, paste):
         return helper.download(paste.url)

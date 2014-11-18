@@ -10,11 +10,9 @@ import logging
 
 class SlexyPaste(Paste):
     def __init__(self, id):
-        self.id = id
+        super(SlexyPaste, self).__init__(id)
         self.headers = {'Referer': 'http://slexy.org/view/' + self.id}
         self.url = 'http://slexy.org/raw/' + self.id
-        super(SlexyPaste, self).__init__()
-
 
 class Slexy(Site):
     def __init__(self, last_id=None):
@@ -24,24 +22,22 @@ class Slexy(Site):
         self.BASE_URL = 'http://slexy.org'
         self.sleep = SLEEP_SLEXY
         super(Slexy, self).__init__()
-
+        
+    def parse(self):
+        return BeautifulSoup(helper.download(self.BASE_URL + '/recent')).find_all(
+            lambda tag: tag.name == 'td' and tag.a and '/view/' in tag.a['href'])  
+        
     def update(self):
         '''update(self) - Fill Queue with new Slexy IDs'''
         logging.info('[*] Retrieving Slexy ID\'s')
-        results = BeautifulSoup(helper.download(self.BASE_URL + '/recent')).find_all(
-            lambda tag: tag.name == 'td' and tag.a and '/view/' in tag.a['href'])
-        new_pastes = []
-        if not self.ref_id:
-            results = results[:60]
-        for entry in results:
+
+        i=0   
+        for entry in self.parse():
             paste = SlexyPaste(entry.a['href'].replace('/view/', ''))
-            # Check to see if we found our last checked URL
-            if paste.id == self.ref_id:
-                break
-            new_pastes.append(paste)
-        for entry in new_pastes[::-1]:
-            logging.info('[+] Adding URL: ' + entry.url)
-            self.put(entry)
+            if not self.hasSeen(paste):
+                i+=1
+                self.put(paste)
+        logging.info('Slexy Added URLs: ' + str(i))
 
     def get_paste_text(self, paste):
         return helper.download(paste.url, paste.headers)
