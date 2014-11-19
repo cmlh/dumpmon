@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from bson import Code
-
+from twitter import TwitterError
 from settings import USE_DB, DB_HOST, DB_PORT, STATS_FREQ
 
 import logging
