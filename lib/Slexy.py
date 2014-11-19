@@ -15,10 +15,7 @@ class SlexyPaste(Paste):
         self.url = 'http://slexy.org/raw/' + self.id
 
 class Slexy(Site):
-    def __init__(self, last_id=None):
-        if not last_id:
-            last_id = None
-        self.ref_id = last_id
+    def __init__(self):
         self.BASE_URL = 'http://slexy.org'
         self.sleep = SLEEP_SLEXY
         super(Slexy, self).__init__()

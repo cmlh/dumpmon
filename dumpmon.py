@@ -14,6 +14,7 @@ from lib.Slexy import Slexy, SlexyPaste
 from lib.Pastie import Pastie, PastiePaste
 from lib.helper import log
 from lib.TwitterBot import TwitterBot
+from lib.Stats import Stats
 from time import sleep
 from settings import log_file
 import threading
@@ -36,7 +37,7 @@ def monitor():
         level = logging.DEBUG
     
     logging.basicConfig(
-        format='%(asctime)s [%(levelname)s] %(funcName)s %(module)s %(message)s', filename=log_file, level=level)
+        format='%(asctime)s [%(levelname)s] [%(module)s] [%(funcName)s] %(message)s', filename=log_file, level=level)
     logging.info('Monitoring...')
     
     bot = TwitterBot()
@@ -50,10 +51,11 @@ def monitor():
          t.start()
          
     createThread(bot.monitor)
-    createThread(bot.test)
-    #createThread(Pastebin().monitor,bot)
-    #createThread(Slexy().monitor,bot)
-    #createThread(Pastie().monitor,bot)
+    createThread(Stats().monitor,bot)
+
+    createThread(Pastebin().monitor,bot)
+    createThread(Slexy().monitor,bot)
+    createThread(Pastie().monitor,bot)
 
     # Let threads run
     try:

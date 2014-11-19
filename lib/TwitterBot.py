@@ -20,6 +20,9 @@ class TwitterBot(Twitter):
             time.sleep(2)
            
     def monitor(self):
+        """
+        This stream function is blocking and will not yield, thus does not need to be in a loop; refer to the docs
+        """
         twitter_userstream = TwitterStream(auth=self.auth, domain='userstream.twitter.com')
         try:
             for msg in twitter_userstream.user():

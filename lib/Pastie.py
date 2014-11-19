@@ -15,10 +15,7 @@ class PastiePaste(Paste):
         self.url = 'http://pastie.org/pastes/' + self.id + '/text'
 
 class Pastie(Site):
-    def __init__(self, last_id=None):
-        if not last_id:
-            last_id = None
-        self.ref_id = last_id
+    def __init__(self):
         self.BASE_URL = 'http://pastie.org'
         self.sleep = SLEEP_PASTIE
         super(Pastie, self).__init__()

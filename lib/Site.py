@@ -38,6 +38,7 @@ class Site(object):
         
         if queue is None:
             self.queue = []
+            
         if USE_DB:
             # Lazily create the db and collection if not present
             self.db_client = MongoClient(DB_HOST, DB_PORT).paste_db.pastes
@@ -100,7 +101,6 @@ class Site(object):
                 #need to sleep to avoid the ban....
                 #time.sleep(self.sleep/4)
                 paste = self.get()
-                self.ref_id = paste.id
                 logging.info('[*] Checking ' + paste.url)
                 paste.text = self.get_paste_text(paste)
                 tweet = helper.build_tweet(paste)

@@ -15,10 +15,7 @@ class PastebinPaste(Paste):
         self.url = 'http://pastebin.com/raw.php?i=' + self.id
 
 class Pastebin(Site):
-    def __init__(self, last_id=None):
-        if not last_id:
-            last_id = None
-        self.ref_id = last_id
+    def __init__(self):
         self.BASE_URL = 'http://pastebin.com'
         self.sleep = SLEEP_PASTEBIN
         super(Pastebin, self).__init__()
