@@ -93,12 +93,12 @@ class Site(object):
         #override this
         pass
     
-    def monitor(self, bot, t_lock):
+    def monitor(self, bot):
         self.update()
         while(1):
             while not self.empty():
                 #need to sleep to avoid the ban....
-                time.sleep(self.sleep/4)
+                #time.sleep(self.sleep/4)
                 paste = self.get()
                 self.ref_id = paste.id
                 logging.info('[*] Checking ' + paste.url)
@@ -106,7 +106,7 @@ class Site(object):
                 tweet = helper.build_tweet(paste)
                 if tweet:
                     logging.info(tweet)
-                    with t_lock:
+                    with bot.tweetLock:
                         if USE_DB:
                             self.db_client.save({
                                 'pid' : paste.id,

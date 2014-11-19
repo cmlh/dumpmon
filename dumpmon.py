@@ -13,9 +13,9 @@ from lib.Pastebin import Pastebin, PastebinPaste
 from lib.Slexy import Slexy, SlexyPaste
 from lib.Pastie import Pastie, PastiePaste
 from lib.helper import log
+from lib.TwitterBot import TwitterBot
 from time import sleep
-from twitter import *
-from settings import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET, log_file
+from settings import log_file
 import threading
 import logging
 
@@ -36,32 +36,24 @@ def monitor():
         level = logging.DEBUG
     
     logging.basicConfig(
-        format='%(asctime)s [%(levelname)s] %(message)s', filename=log_file, level=level)
+        format='%(asctime)s [%(levelname)s] %(funcName)s %(module)s %(message)s', filename=log_file, level=level)
     logging.info('Monitoring...')
     
-    bot = Twitter(
-        auth=OAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET,
-            CONSUMER_KEY, CONSUMER_SECRET)
-        )
+    bot = TwitterBot()
                             
-    # Create lock for both output log and tweet action
+    # Create lock for output log
     log_lock = threading.Lock()
-    tweet_lock = threading.Lock()
-
-    pastebin_thread = threading.Thread(
-        target=Pastebin().monitor, args=[bot, tweet_lock])
-    pastebin_thread.daemon = True
-    pastebin_thread.start()
     
-    slexy_thread = threading.Thread(
-        target=Slexy().monitor, args=[bot, tweet_lock])
-    slexy_thread.daemon = True
-    slexy_thread.start() 
-       
-    pastie_thead = threading.Thread(
-        target=Pastie().monitor, args=[bot, tweet_lock])
-    pastie_thead.daemon = True
-    pastie_thead.start() 
+    def createThread(target,*args,**kwargs):        
+         t = threading.Thread(target=target, args=args, kwargs=kwargs)         
+         t.daemon = True
+         t.start()
+         
+    createThread(bot.monitor)
+    createThread(bot.test)
+    #createThread(Pastebin().monitor,bot)
+    #createThread(Slexy().monitor,bot)
+    #createThread(Pastie().monitor,bot)
 
     # Let threads run
     try:
