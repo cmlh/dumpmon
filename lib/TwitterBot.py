@@ -3,29 +3,30 @@ from settings import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_S
 import logging
 import time
 import threading
-from lib.RegexMgr import RegexMgr
 from lib.Stats import Stats
 
 class TwitterBot(Twitter):
     """
     Subclassing the Twitter API and botifying it
     """
-    def __init__(self):
+    def __init__(self,regexMgr):
         super(TwitterBot, self).__init__(auth=OAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET,
             CONSUMER_KEY, CONSUMER_SECRET))
         
         self.tweetLock= threading.Lock()
         
-        #might not really be the right place for this, but for now.
-        self.regexMgr = RegexMgr()
+        self.regexMgr = regexMgr
         self.statusMgr = Stats()
     
     def status(self,aryDM,user):
         return self.statusMgr.status()
         
     def addregex(self,aryDM,user):
+        """
+        The add regex assumes that ary[0] = 'addregex' and ary[1] = 'theregex'
+        """
         response = None
-        if self.regexMgr.add(text,user):  
+        if self.regexMgr.add(aryDM[1],user):  
             response = "Your regex has been added! Thanks!"
         else:
             response  = "I could not add your regex, it didn't validate. :("
@@ -55,6 +56,7 @@ class TwitterBot(Twitter):
                 
     def monitor(self):
         """
+        This function is expected to be on a separate thread.
         This stream function is blocking and will not yield, thus does not need to be in a loop; refer to the docs
         """
         twitter_userstream = TwitterStream(auth=self.auth, domain='userstream.twitter.com')

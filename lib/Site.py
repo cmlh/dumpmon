@@ -120,7 +120,7 @@ class Site(object):
                                 'url' : paste.url
                                })
                         try:
-                            logging.debug('[++++++++++++] Tweet %s'%(tweet))
+                            logging.debug('[+] Tweet %s'%(tweet))
                             bot.statuses.update(status=tweet)
                         except TwitterError as e:
                             logging.debug('[!] TwitterError %s'%(str(e)))

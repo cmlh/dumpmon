@@ -14,6 +14,7 @@ from lib.Slexy import Slexy, SlexyPaste
 from lib.Pastie import Pastie, PastiePaste
 from lib.helper import log
 from lib.TwitterBot import TwitterBot
+from lib.RegexMgr import RegexMgr
 from lib.Stats import Stats
 from time import sleep
 from settings import log_file
@@ -40,8 +41,9 @@ def monitor():
         format='%(asctime)s [%(levelname)s]    [%(module)s]    [%(funcName)s]    %(message)s', filename=log_file, level=level)
     logging.info('Monitoring...')
     
-    bot = TwitterBot()
-                            
+    regexMgr = RegexMgr()
+    bot = TwitterBot(regexMgr)
+                        
     # Create lock for output log
     log_lock = threading.Lock()
     

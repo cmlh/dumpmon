@@ -66,7 +66,7 @@ class Stats(object):
                 if msg:
                     with twitterBot.tweetLock:
                         try:
-                            logging.debug('[++++++++++++] Status Tweet %s'%(msg))
+                            logging.debug('[+] Status Tweet %s'%(msg))
                             twitterBot.statuses.update(status=msg)
                         except TwitterError as e:
                             logging.debug('[!] TwitterError %s'%(str(e)))
