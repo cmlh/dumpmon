@@ -23,3 +23,9 @@ SLEEP_PASTIE = 30
 # Other configuration
 tweet_history = "tweet.history"
 log_file = "output.log"
+
+#this needs to be set to the max you'd expect to pull from a single page!!
+#    otherwise you will get a rolling queue and possible process parsed URLs more than once
+SEEN_DEQUE_LEN = 500
+
+STATS_FREQ = 60*60

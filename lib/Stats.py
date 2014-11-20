@@ -9,7 +9,6 @@ import time
 class Stats(object):
     def __init__(self):
         if USE_DB:
-            # Lazily create the db and collection if not present
             try:
                 self.client = MongoClient(DB_HOST, DB_PORT).paste_db.pastes        
             except pymongo.errors.ConnectionFailure, e:
@@ -46,22 +45,31 @@ class Stats(object):
                         "}")
             result = self.client.map_reduce(map,reduce,"res") 
             return result 
-                          
+
+    def status(self):
+        if not USE_DB:
+            logging.warning("[!] Not going to produce Stats because DB is off.")
+            return None
+        try:
+            e = self.uniqueEmailSet().count()
+            h = self.uniqueHashSet().count()
+            msg =  "Status as of %s: \n Unique emails: %i, Unique hashes: %i\n #infosec #dataleak"%(time.strftime("%c"),e,h)    
+            return msg
+        except Exception,e:
+            logging.error('[!] Database Error %s'%(e))
+            return None
+                                                      
     def monitor(self,twitterBot):
         while(True):
-            if not USE_DB:
-                logging.warning("[!] Not going to produce Stats because DB is off.")
-                return
             try:
-                e = self.uniqueEmailSet().count()
-                h = self.uniqueHashSet().count()
-                msg =  "Dump Monitor status: \n Unique emails: %i, Unique hashes: %i\n #infosec #dataleak"%(e,h)
-                with twitterBot.tweetLock:
-                    try:
-                        logging.debug('[++++++++++++] Status Tweet %s'%(msg))
-                        twitterBot.statuses.update(status=msg)
-                    except TwitterError as e:
-                        logging.debug('[!] TwitterError %s'%(str(e)))
+                msg = self.status()
+                if msg:
+                    with twitterBot.tweetLock:
+                        try:
+                            logging.debug('[++++++++++++] Status Tweet %s'%(msg))
+                            twitterBot.statuses.update(status=msg)
+                        except TwitterError as e:
+                            logging.debug('[!] TwitterError %s'%(str(e)))
             except Exception,e:
                 logging.error('[!] Database Error %s'%(e))
                 

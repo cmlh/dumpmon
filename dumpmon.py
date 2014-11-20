@@ -37,7 +37,7 @@ def monitor():
         level = logging.DEBUG
     
     logging.basicConfig(
-        format='%(asctime)s [%(levelname)s] [%(module)s] [%(funcName)s] %(message)s', filename=log_file, level=level)
+        format='%(asctime)s [%(levelname)s]    [%(module)s]    [%(funcName)s]    %(message)s', filename=log_file, level=level)
     logging.info('Monitoring...')
     
     bot = TwitterBot()
@@ -51,11 +51,11 @@ def monitor():
          t.start()
          
     createThread(bot.monitor)
-    createThread(Stats().monitor,bot)
+    #createThread(Stats().monitor,bot)
 
-    createThread(Pastebin().monitor,bot)
-    createThread(Slexy().monitor,bot)
-    createThread(Pastie().monitor,bot)
+    #createThread(Pastebin().monitor,bot)
+    #createThread(Slexy().monitor,bot)
+    #createThread(Pastie().monitor,bot)
 
     # Let threads run
     try:
