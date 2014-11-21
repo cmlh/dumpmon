@@ -48,7 +48,7 @@ def monitor():
     log_lock = threading.Lock()
          
     createThread(bot.monitor)
-    createThread(Stats().monitor,bot)
+    #createThread(Stats().monitor,bot)
 
     createThread(Pastebin().monitor,bot)
     createThread(Slexy().monitor,bot)

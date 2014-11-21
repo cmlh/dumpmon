@@ -38,4 +38,4 @@ class Pastebin(Site):
         logging.info('Pastebin Added URLs: ' + str(i))
            
     def get_paste_text(self, paste):
-        return helper.download(paste.url)
+        return helper.curl(paste.url)

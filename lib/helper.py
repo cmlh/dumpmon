@@ -10,6 +10,8 @@ from time import sleep, strftime
 import logging
 import threading
 
+import pycurl
+from StringIO import StringIO
 
 r = requests.Session()
 def createThread(target,*args,**kwargs):        
@@ -17,6 +19,17 @@ def createThread(target,*args,**kwargs):
      t.daemon = True
      t.start()
              
+def curl (url):
+    buffer = StringIO()
+    c = pycurl.Curl()
+    c.setopt(c.URL, url)
+    c.setopt(c.WRITEDATA, buffer)
+    c.perform()
+    rc = c.getinfo(c.RESPONSE_CODE)
+    c.close()   
+    logging.debug('[*] Response code: %d'%(rc))
+    return buffer.getvalue()    
+
 def download(url, headers=None):
     if not headers:
         headers = None

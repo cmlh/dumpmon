@@ -59,4 +59,4 @@ class UserSubmitted(Site):
 
            
     def get_paste_text(self, paste):
-        return helper.download(paste.url)
+        return helper.curl(paste.url)

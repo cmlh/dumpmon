@@ -102,7 +102,7 @@ class Site(object):
         while(1):
             while not self.empty():
                 #need to sleep to avoid the ban....
-                #time.sleep(self.sleep/4)
+                time.sleep(2)
                 paste = self.get()
                 logging.info('[*] Checking ' + paste.url)
                 paste.text = self.get_paste_text(paste)
@@ -126,7 +126,7 @@ class Site(object):
                             logging.debug('[+] Tweet %s'%(tweet))
                             bot.statuses.update(status=tweet)
                         except TwitterError as e:
-                            logging.debug('[!] TwitterError %s'%(str(e)))
+                            logging.error('[!] TwitterError %s'%(str(e)))
             self.update()
             while self.empty():
                 logging.debug('[*] No results... sleeping')

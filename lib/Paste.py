@@ -9,8 +9,9 @@ class Paste(object):
         class Paste: Generic "Paste" object to contain attributes of a standard paste
         '''
         self.id = id
-        self.emails = 0
-        self.hashes = 0
+        self.emails = []
+        self.emails2 = []
+        self.hashes = []
         self.num_emails = 0
         self.num_hashes = 0
         self.text = None
@@ -36,12 +37,23 @@ class Paste(object):
 
         '''
         # Get the amount of emails
-        self.emails = list(set(regexes['email'].findall(self.text)))
+        r = self.text.splitlines()
+        logging.debug("[*] Text: %s"%(self.text))
+        logging.debug("[*] Num Lines in text: %i"%(len(r)))
+        if regexes['email'].search(self.text):
+            self.emails = regexes['email'].findall(self.text)
+            
+        if regexes['email2'].search(self.text):
+            self.emails2 = regexes['email2'].findall(self.text)
         
         self.hashes = regexes['hash32'].findall(self.text)
         
         self.num_emails = len(self.emails)
         logging.debug("[*] Num Emails: %i"%(self.num_emails))
+        
+        self.num_emails = len(self.emails2)
+        logging.debug("[*] Num Emails2: %i"%(self.num_emails))
+        
         self.num_hashes = len(self.hashes)
         logging.debug("[*] Num Hashes: %i"%(self.num_hashes))
         
