@@ -84,14 +84,17 @@ class Site(object):
 
     def parse(self):
         #override this
+        logging.error('[@] Function Not Implemented in Subclass')
         pass
     
     def update(self):
         #override this
+        logging.error('[@] Function Not Implemented in Subclass')
         pass
     
     def get_paste_text(self):
         #override this
+        logging.error('[@] Function Not Implemented in Subclass')
         pass
     
     def monitor(self, bot):

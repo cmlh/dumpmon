@@ -7,7 +7,6 @@ class Paste(object):
     def __init__(self,id):
         '''
         class Paste: Generic "Paste" object to contain attributes of a standard paste
-
         '''
         self.id = id
         self.emails = 0
@@ -42,11 +41,13 @@ class Paste(object):
         self.hashes = regexes['hash32'].findall(self.text)
         
         self.num_emails = len(self.emails)
-        
+        logging.debug("[*] Num Emails: %i"%(self.num_emails))
         self.num_hashes = len(self.hashes)
+        logging.debug("[*] Num Hashes: %i"%(self.num_hashes))
         
         if self.num_emails > 0:
             self.sites = list(set([re.search('@(.*)$', email).group(1).lower() for email in self.emails]))
+            logging.debug("[*] Num Sites: %i"%(len(self.sites)))
             
         for regex in regexes['db_keywords']:
             if regex.search(self.text):
@@ -77,5 +78,6 @@ class Paste(object):
             if regex.search(self.text):
                 self.type = None
                 break
-            
+
+        logging.debug("[*] Type: %s"%(self.type))    
         return self.type

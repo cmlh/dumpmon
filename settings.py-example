@@ -20,6 +20,7 @@ SLEEP_SLEXY = 60
 SLEEP_PASTEBIN = 15
 SLEEP_PASTIE = 30
 
+
 # Other configuration
 tweet_history = "tweet.history"
 log_file = "output.log"

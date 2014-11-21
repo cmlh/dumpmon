@@ -19,6 +19,7 @@ class Pastebin(Site):
         self.BASE_URL = 'http://pastebin.com'
         self.sleep = SLEEP_PASTEBIN
         super(Pastebin, self).__init__()
+        logging.info('[+] Started PasteBin')
         
     def parse(self):
         return BeautifulSoup(helper.download(self.BASE_URL + '/archive')).find_all(

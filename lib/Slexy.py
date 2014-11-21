@@ -19,6 +19,7 @@ class Slexy(Site):
         self.BASE_URL = 'http://slexy.org'
         self.sleep = SLEEP_SLEXY
         super(Slexy, self).__init__()
+        logging.info('[+] Started Slexy')
         
     def parse(self):
         return BeautifulSoup(helper.download(self.BASE_URL + '/recent')).find_all(

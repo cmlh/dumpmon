@@ -12,7 +12,7 @@ from lib.regexes import regexes
 from lib.Pastebin import Pastebin, PastebinPaste
 from lib.Slexy import Slexy, SlexyPaste
 from lib.Pastie import Pastie, PastiePaste
-from lib.helper import log
+from lib.helper import log, createThread
 from lib.TwitterBot import TwitterBot
 from lib.RegexMgr import RegexMgr
 from lib.Stats import Stats
@@ -46,18 +46,13 @@ def monitor():
                         
     # Create lock for output log
     log_lock = threading.Lock()
-    
-    def createThread(target,*args,**kwargs):        
-         t = threading.Thread(target=target, args=args, kwargs=kwargs)         
-         t.daemon = True
-         t.start()
          
     createThread(bot.monitor)
-    #createThread(Stats().monitor,bot)
+    createThread(Stats().monitor,bot)
 
-    #createThread(Pastebin().monitor,bot)
-    #createThread(Slexy().monitor,bot)
-    #createThread(Pastie().monitor,bot)
+    createThread(Pastebin().monitor,bot)
+    createThread(Slexy().monitor,bot)
+    createThread(Pastie().monitor,bot)
 
     # Let threads run
     try:

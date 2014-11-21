@@ -19,6 +19,7 @@ class Pastie(Site):
         self.BASE_URL = 'http://pastie.org'
         self.sleep = SLEEP_PASTIE
         super(Pastie, self).__init__()
+        logging.info('[+] Started Pastie')
         
     def parse(self):
         return [tag for tag in BeautifulSoup(helper.download(

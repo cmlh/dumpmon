@@ -4,6 +4,9 @@ import logging
 import time
 import threading
 from lib.Stats import Stats
+from lib.helper import createThread
+
+from lib.UserSubmitted import UserSubmitted, UserSubmittedPaste
 
 class TwitterBot(Twitter):
     """
@@ -17,6 +20,16 @@ class TwitterBot(Twitter):
         
         self.regexMgr = regexMgr
         self.statusMgr = Stats()
+        self.userSubmittedSite = UserSubmitted()
+        logging.info('[+] Started TwitterBot')
+    
+    def check(self,aryDM,user):
+        self.userSubmittedSite.update(aryDM[1])
+        response = self.userSubmittedSite.monitor(self)
+        if response:     
+            return response
+        else:
+            return "I did not find anything interesting for "+aryDM[1]
     
     def status(self,aryDM,user):
         return self.statusMgr.status()
@@ -40,9 +53,11 @@ class TwitterBot(Twitter):
         response = None
         #assume that we are going to use a space delim protocol and the ary[0] is the function name to call.
         aryDM = dm['text'].split()
+        logging.info('[+] Processing DM action: %s'%(aryDM[0])) 
         f = getattr(self,aryDM[0])
         if f:
-            response = f(aryDM,dm['sender']['screen_name']) 
+            user = dm['sender']['screen_name']
+            response = f(aryDM, user) 
             logging.info('[+] Sending DM response: %s Screen Name: %s'%(response,dm['sender']['screen_name'])) 
         else:
             logging.error('[!] Could not find function in protocol: %s Screen Name: %s'%(aryDM[0],dm['sender']['screen_name']))

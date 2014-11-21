@@ -8,10 +8,15 @@ import requests
 import settings
 from time import sleep, strftime
 import logging
+import threading
 
 
 r = requests.Session()
-    
+def createThread(target,*args,**kwargs):        
+     t = threading.Thread(target=target, args=args, kwargs=kwargs)         
+     t.daemon = True
+     t.start()
+             
 def download(url, headers=None):
     if not headers:
         headers = None
