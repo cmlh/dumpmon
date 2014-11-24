@@ -22,7 +22,7 @@ class Pastie(Site):
         logging.info('[+] Started Pastie')
         
     def parse(self):
-        return [tag for tag in BeautifulSoup(helper.download(
+        return [tag for tag in BeautifulSoup(helper.curl(
             self.BASE_URL + '/pastes')).find_all('p', 'link') if tag.a]
 
     def update(self):

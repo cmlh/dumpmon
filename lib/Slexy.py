@@ -22,7 +22,7 @@ class Slexy(Site):
         logging.info('[+] Started Slexy')
         
     def parse(self):
-        return BeautifulSoup(helper.download(self.BASE_URL + '/recent')).find_all(
+        return BeautifulSoup(helper.curl(self.BASE_URL + '/recent')).find_all(
             lambda tag: tag.name == 'td' and tag.a and '/view/' in tag.a['href'])  
         
     def update(self):
@@ -38,4 +38,4 @@ class Slexy(Site):
         logging.info('Slexy Added URLs: ' + str(i))
 
     def get_paste_text(self, paste):
-        return helper.download(paste.url, paste.headers)
+        return helper.curl(paste.url, paste.headers['Referer'])

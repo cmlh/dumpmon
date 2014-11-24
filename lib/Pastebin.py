@@ -22,7 +22,7 @@ class Pastebin(Site):
         logging.info('[+] Started PasteBin')
         
     def parse(self):
-        return BeautifulSoup(helper.download(self.BASE_URL + '/archive')).find_all(
+        return BeautifulSoup(helper.curl(self.BASE_URL + '/archive')).find_all(
             lambda tag: tag.name == 'td' and tag.a and '/archive/' not in tag.a['href'] and tag.a['href'][1:])        
         
     def update(self):

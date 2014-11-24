@@ -54,20 +54,25 @@ class TwitterBot(Twitter):
         #assume that we are going to use a space delim protocol and the ary[0] is the function name to call.
         aryDM = dm['text'].split()
         logging.info('[+] Processing DM action: %s'%(aryDM[0])) 
-        f = getattr(self,aryDM[0])
-        if f:
-            user = dm['sender']['screen_name']
-            response = f(aryDM, user) 
-            logging.info('[+] Sending DM response: %s Screen Name: %s'%(response,dm['sender']['screen_name'])) 
-        else:
-            logging.error('[!] Could not find function in protocol: %s Screen Name: %s'%(aryDM[0],dm['sender']['screen_name']))
-                          
-        if response:
-            with self.tweetLock:
-                try:
-                    self.direct_messages.new(user=dm['sender']['screen_name'],text=response)
-                except TwitterError as e:
-                    logging.debug('[!] TwitterError %s'%(str(e)))
+        
+        try:
+            f = getattr(self,aryDM[0])
+            if f:
+                user = dm['sender']['screen_name']
+                response = f(aryDM, user) 
+                logging.info('[+] Sending DM response: %s Screen Name: %s'%(response,dm['sender']['screen_name'])) 
+            else:
+                logging.error('[!] Could not find function in protocol: %s Screen Name: %s'%(aryDM[0],dm['sender']['screen_name']))
+                              
+            if response:
+                with self.tweetLock:
+                    try:
+                        self.direct_messages.new(user=dm['sender']['screen_name'],text=response)
+                    except TwitterError as e:
+                        logging.debug('[!] TwitterError %s'%(str(e)))
+        except Exception as e:
+            logging.error('[!] Error trying to parse DM: %s '%(aryDM))
+            
                 
     def monitor(self):
         """

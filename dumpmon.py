@@ -12,6 +12,8 @@ from lib.regexes import regexes
 from lib.Pastebin import Pastebin, PastebinPaste
 from lib.Slexy import Slexy, SlexyPaste
 from lib.Pastie import Pastie, PastiePaste
+from lib.HaveIBeen import HaveIBeen, HaveIBeenPaste
+
 from lib.helper import log, createThread
 from lib.TwitterBot import TwitterBot
 from lib.RegexMgr import RegexMgr
@@ -48,8 +50,9 @@ def monitor():
     log_lock = threading.Lock()
          
     createThread(bot.monitor)
-    #createThread(Stats().monitor,bot)
+    createThread(Stats().monitor,bot)
 
+    createThread(HaveIBeen().monitor,bot)
     createThread(Pastebin().monitor,bot)
     createThread(Slexy().monitor,bot)
     createThread(Pastie().monitor,bot)

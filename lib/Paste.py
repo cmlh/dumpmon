@@ -38,7 +38,7 @@ class Paste(object):
         '''
         # Get the amount of emails
         r = self.text.splitlines()
-        logging.debug("[*] Text: %s"%(self.text))
+        #logging.debug("[*] Text: %s"%(self.text))
         logging.debug("[*] Num Lines in text: %i"%(len(r)))
         if regexes['email'].search(self.text):
             self.emails = regexes['email'].findall(self.text)

@@ -19,11 +19,15 @@ def createThread(target,*args,**kwargs):
      t.daemon = True
      t.start()
              
-def curl (url):
+def curl (url,referer=None):
     buffer = StringIO()
     c = pycurl.Curl()
     c.setopt(c.URL, url)
     c.setopt(c.WRITEDATA, buffer)
+    
+    if referer:
+        c.setopt(c.REFERER, referer)
+    
     c.perform()
     rc = c.getinfo(c.RESPONSE_CODE)
     c.close()   
@@ -83,6 +87,5 @@ def build_tweet(paste):
         elif paste.type == 'honeypot':
             tweet += ' Dionaea Honeypot Log'
         tweet += ' #infosec #dataleak'
-    if paste.num_emails > 0:
-        print(paste.emails)
+
     return tweet
