@@ -89,6 +89,9 @@ class TwitterBot(Twitter):
                 #process DMs, but only from other people     
                 if 'direct_message' in msg and msg['direct_message']['sender']['screen_name'] != TWITTER_SCREEN_NAME:
                     self._parseTweet(msg['direct_message'],msg)
+                
+                if 'event' in msg:
+                    logging.debug("{^} %s"%(msg))
                     
         except StopIteration:
             print("stopping iteration")
