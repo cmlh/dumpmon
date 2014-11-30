@@ -29,8 +29,12 @@ class HaveIBeen(Site):
         self.feedURL = 'http://feeds.feedburner.com/HaveIBeenPwnedLatestPastes'
         
     def _parse(self):
-        d = feedparser.parse(self.feedURL)
-        return d['entries']
+        try:
+            d = feedparser.parse(self.feedURL)
+            return d['entries']
+        except Exception as e:
+            logging.error('[!] Feed Parser Error: %s'%(str(e)))
+            return None
         
     def update(self):
         logging.info('Retrieving HaveIBeenPwned ID\'s')

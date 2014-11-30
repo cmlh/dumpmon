@@ -38,4 +38,8 @@ class Pastie(Site):
         logging.info('Pastie Added URLs: ' + str(i))
 
     def get_paste_text(self, paste):
-        return BeautifulSoup(helper.curl(paste.url)).pre.text
+        try:
+            return BeautifulSoup(helper.curl(paste.url)).pre.text
+        except Exception as e:
+            logging.error('[!] Beautiful Soup Error: %s'%(str(e)))
+            return None

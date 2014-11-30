@@ -20,19 +20,22 @@ def createThread(target,*args,**kwargs):
      t.start()
              
 def curl (url,referer=None):
-    buffer = StringIO()
-    c = pycurl.Curl()
-    c.setopt(c.URL, url)
-    c.setopt(c.WRITEDATA, buffer)
-    
-    if referer:
-        c.setopt(c.REFERER, referer)
-    
-    c.perform()
-    rc = c.getinfo(c.RESPONSE_CODE)
-    c.close()   
-    logging.debug('[*] Response code: %d'%(rc))
-    return buffer.getvalue()    
+    try:
+        buffer = StringIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.WRITEDATA, buffer)
+        
+        if referer:
+            c.setopt(c.REFERER, referer)
+        
+        c.perform()
+        rc = c.getinfo(c.RESPONSE_CODE)
+        c.close()   
+        logging.debug('[*] Response code: %d'%(rc))
+        return buffer.getvalue()    
+    except Exception as e:
+        logging.error('[!] Curl Error: %s'%(str(e)))
 
 def download(url, headers=None):
     if not headers:

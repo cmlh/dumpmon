@@ -111,17 +111,20 @@ class Site(object):
                     logging.info(tweet)
                     with bot.tweetLock:
                         if USE_DB:
-                            self.db_client.save({
-                                'pid' : paste.id,
-                                'text' : paste.text,
-                                'emails' : paste.emails,
-                                'hashes' : paste.hashes,
-                                'num_emails' : paste.num_emails,
-                                'num_hashes' : paste.num_hashes,
-                                'type' : paste.type,
-                                'db_keywords' : paste.db_keywords,
-                                'url' : paste.url
-                               })
+                            try:
+                                self.db_client.save({
+                                    'pid' : paste.id,
+                                    'text' : paste.text,
+                                    'emails' : paste.emails,
+                                    'hashes' : paste.hashes,
+                                    'num_emails' : paste.num_emails,
+                                    'num_hashes' : paste.num_hashes,
+                                    'type' : paste.type,
+                                    'db_keywords' : paste.db_keywords,
+                                    'url' : paste.url
+                                   })
+                            except Exception as e:
+                                logging.error('[!] MongoDB Error %s'%(str(e)))
                         try:
                             logging.debug('[+] Tweet %s'%(tweet))
                             bot.statuses.update(status=tweet)
