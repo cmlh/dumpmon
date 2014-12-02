@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from bson import Code
 DB_HOST = 'localhost'
 DB_PORT = 27017
 
