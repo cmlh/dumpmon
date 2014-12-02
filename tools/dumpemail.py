@@ -1,5 +1,6 @@
 from pymongo import MongoClient
-from settings import USE_DB, DB_HOST, DB_PORT
+DB_HOST = 'localhost'
+DB_PORT = 27017
 
 client = MongoClient(DB_HOST, DB_PORT).paste_db.pastes
 
@@ -19,4 +20,4 @@ def uniqueEmailSet():
         result = client.map_reduce(map,reduce,"res") 
         return result 
 
-uniqueEmailSet()
+print uniqueEmailSet()
