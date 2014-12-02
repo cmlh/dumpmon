@@ -21,4 +21,5 @@ def uniqueEmailSet():
         result = client.map_reduce(map,reduce,"res") 
         return result 
 
-print uniqueEmailSet()
+for r in uniqueEmailSet().find():
+    print r
