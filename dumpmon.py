@@ -45,7 +45,7 @@ def monitor():
     
     handler = RotatingFileHandler(log_file, maxBytes=20*1000,
                                   backupCount=5)
-    logging.addHandler(handler)
+    #logging.addHandler(handler)
     
     logging.info('Monitoring...')
     
