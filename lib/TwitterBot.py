@@ -78,8 +78,8 @@ class TwitterBot(Twitter):
             Follows back everyone who's followed you
         """
     
-        following = set(self.friends.ids(screen_name=TWITTER_HANDLE)["ids"])
-        followers = set(self.followers.ids(screen_name=TWITTER_HANDLE)["ids"])
+        following = set(self.friends.ids(screen_name=TWITTER_SCREEN_NAME)["ids"])
+        followers = set(self.followers.ids(screen_name=TWITTER_SCREEN_NAME)["ids"])
     
         not_following_back = followers - following
     
