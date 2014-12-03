@@ -43,7 +43,7 @@ def monitor():
     logging.basicConfig(
         format='%(asctime)s [%(levelname)s]    [%(module)s]    [%(funcName)s]    %(message)s', filename=log_file, level=level)
     
-    handler = RotatingFileHandler(".", maxBytes=20*1000,
+    handler = RotatingFileHandler(log_file, maxBytes=20*1000,
                                   backupCount=5)
     logging.addHandler(handler)
     
