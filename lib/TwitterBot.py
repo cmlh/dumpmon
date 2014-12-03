@@ -72,7 +72,23 @@ class TwitterBot(Twitter):
                         logging.debug('[!] TwitterError %s'%(str(e)))
         except Exception as e:
             logging.error('[!] Error trying to parse DM: %s '%(aryDM))
-            
+    
+    def auto_follow_followers(self):
+        """
+            Follows back everyone who's followed you
+        """
+    
+        following = set(self.friends.ids(screen_name=TWITTER_HANDLE)["ids"])
+        followers = set(self.followers.ids(screen_name=TWITTER_HANDLE)["ids"])
+    
+        not_following_back = followers - following
+    
+        for user_id in not_following_back:
+            try:
+                self.friendships.create(user_id=user_id, follow=True)
+                logging.info('[+] Now Following: %s'%(user_id)) 
+            except Exception as e:
+                logging.error('[!] Error trying to add followers: %s '%(str(e)))          
                 
     def monitor(self):
         """
@@ -83,6 +99,7 @@ class TwitterBot(Twitter):
         try:
             for msg in twitter_userstream.user():
                 #logging.debug("{^} %s"%(msg))
+                self.auto_follow_followers()
                 if 'text' in msg:
                     print("[$] Recieved Tweet %s from %s"%(msg['text'],msg['user']['screen_name']))
                 
