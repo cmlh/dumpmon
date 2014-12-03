@@ -32,7 +32,8 @@ def curl (url,referer=None):
         c.perform()
         rc = c.getinfo(c.RESPONSE_CODE)
         c.close()   
-        logging.debug('[*] Response code: %d'%(rc))
+        if rc != 200:
+            logging.error('[!] %s Response code: %d'%(url,rc))
         return buffer.getvalue()    
     except Exception as e:
         logging.error('[!] Curl Error: %s'%(str(e)))
