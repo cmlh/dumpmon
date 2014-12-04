@@ -90,7 +90,7 @@ class TwitterBot(Twitter):
             except Exception as e:
                 logging.error('[!] Error trying to add followers: %s '%(str(e)))          
                 
-    def monitor(self, isRunning):
+    def monitor(self):
         """
         This function is expected to be on a separate thread.
         This stream function is blocking and will not yield, thus does not need to be in a loop; refer to the docs

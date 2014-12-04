@@ -59,18 +59,20 @@ class Stats(object):
             logging.error('[!] Database Error %s'%(e))
             return None
                                                       
-    def monitor(self,twitterBot,isRunning):
-        while(isRunning.is_set()):
-            try:
-                msg = self.status()
-                if msg:
-                    with twitterBot.tweetLock:
-                        try:
-                            logging.debug('[+] Status Tweet %s'%(msg))
-                            twitterBot.statuses.update(status=msg)
-                        except TwitterError as e:
-                            logging.debug('[!] TwitterError %s'%(str(e)))
-            except Exception,e:
-                logging.error('[!] Database Error %s'%(e))
-                
-            time.sleep(STATS_FREQ)
+    def monitor(self,twitterBot):
+        try:
+            msg = self.status()
+            if msg:
+                with twitterBot.tweetLock:
+                    try:
+                        logging.debug('[+] Status Tweet %s'%(msg))
+                        twitterBot.statuses.update(status=msg)
+                    except TwitterError as e:
+                        logging.debug('[!] TwitterError %s'%(str(e)))
+        except Exception,e:
+            logging.error('[!] Database Error %s'%(e))
+            
+        time.sleep(STATS_FREQ)
+            
+            
+            

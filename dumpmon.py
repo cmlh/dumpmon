@@ -61,7 +61,7 @@ def monitor():
     #array to keep a handle on threads    
     workers = []         
     createThread(bot.monitor)
-    workers.append(createThread(Stats().monitor,bot,isRunning))
+    createThread(Stats().monitor,bot)
     workers.append(createThread(HaveIBeen().monitor,bot,isRunning))
     #workers.append(createThread(Pastebin().monitor,bot,isRunning))
     #workers.append(createThread(Slexy().monitor,bot,isRunning))
@@ -74,11 +74,11 @@ def monitor():
     except KeyboardInterrupt:
         #signal threads to shutdown
         isRunning.clear()
-        
+        print 'stopping'
         #wait for threads to join
         for t in workers:
             t.join()
-            
+        print 'stopped'    
         logging.warn('Stopped.')
 
 
