@@ -22,6 +22,24 @@ class Paste(object):
     def __eq__(self,comparePaste):
         #logging.info('id %s compares to %s'%(self.id, comparePaste.id))
         return self.id == comparePaste.id
+    
+    def __repr__(self):
+        return {
+                'pid' : self.id,
+                'text' : self.text,
+                'emails' : self.emails,
+                'hashes' : self.hashes,
+                'num_emails' : self.num_emails,
+                'num_hashes' : self.num_hashes,
+                'type' : self.type,
+                'db_keywords' : self.db_keywords,
+                'url' : self.url
+               }
+    
+    def get(self):
+        #override this
+        logging.error('[@] Function Not Implemented in Subclass')
+        pass
         
     def match(self):
         '''

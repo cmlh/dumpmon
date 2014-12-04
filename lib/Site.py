@@ -93,37 +93,25 @@ class Site(object):
         logging.error('[@] Function Not Implemented in Subclass')
         pass
     
-    def get_paste_text(self):
-        #override this
-        logging.error('[@] Function Not Implemented in Subclass')
-        pass
+    def terminating(self):
+        #this can be overridden in subclass
+        logging.debug('[!] Terminating.....')
     
-    def monitor(self, bot):
+    def monitor(self, bot, isRunning):
         self.update()
-        while(1):
+        while isRunning.is_set():
             while not self.empty():
                 #need to sleep to avoid the ban....
                 time.sleep(randint(5,17))
                 paste = self.get()
-                logging.info('[*] Checking ' + paste.url)
-                paste.text = self.get_paste_text(paste)
+                paste.get()
                 tweet = helper.build_tweet(paste)
                 if tweet:
                     logging.info(tweet)
                     with bot.tweetLock:
                         if USE_DB:
                             try:
-                                self.db_client.save({
-                                    'pid' : paste.id,
-                                    'text' : paste.text,
-                                    'emails' : paste.emails,
-                                    'hashes' : paste.hashes,
-                                    'num_emails' : paste.num_emails,
-                                    'num_hashes' : paste.num_hashes,
-                                    'type' : paste.type,
-                                    'db_keywords' : paste.db_keywords,
-                                    'url' : paste.url
-                                   })
+                                self.db_client.save(repr(paste))
                             except Exception as e:
                                 logging.error('[!] MongoDB Error %s'%(str(e)))
                         try:
@@ -136,3 +124,4 @@ class Site(object):
                 logging.debug('[*] No results... sleeping')
                 time.sleep(self.sleep)
                 self.update()
+        self.terminating()

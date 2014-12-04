@@ -21,6 +21,9 @@ class HaveIBeenPaste(Paste):
         self.headers = None
         self.url = 'http://pastebin.com/raw.php?i=' + self.id
         
+    def get(self):
+        return helper.curl(self.url)
+        
 class HaveIBeen(Site):
     def __init__(self):
         super(HaveIBeen, self).__init__()
@@ -50,8 +53,7 @@ class HaveIBeen(Site):
         logging.info('HaveIBeenPwned Added URLs: ' + str(i))
 
            
-    def get_paste_text(self, paste):
-        return helper.curl(paste.url)
+
 
 if __name__ == '__main__':
     c = HaveIBeen()

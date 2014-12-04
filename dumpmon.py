@@ -54,20 +54,31 @@ def monitor():
                         
     # Create lock for output log
     log_lock = threading.Lock()
-         
-    createThread(bot.monitor)
-    createThread(Stats().monitor,bot)
-
-    createThread(HaveIBeen().monitor,bot)
-    createThread(Pastebin().monitor,bot)
-    createThread(Slexy().monitor,bot)
-    createThread(Pastie().monitor,bot)
+    
+    #create an event to tell threads to keep running
+    isRunning = threading.Event()
+    isRunning.set()
+    #array to keep a handle on threads    
+    workers = []         
+    workers.append(createThread(bot.monitor,isRunning))
+    workers.append(createThread(Stats().monitor,bot,isRunning))
+    workers.append(createThread(HaveIBeen().monitor,bot,isRunning))
+    #workers.append(createThread(Pastebin().monitor,bot,isRunning))
+    #workers.append(createThread(Slexy().monitor,bot,isRunning))
+    #workers.append(createThread(Pastie().monitor,bot,isRunning))
 
     # Let threads run
     try:
         while(1):
             sleep(5)
     except KeyboardInterrupt:
+        #signal threads to shutdown
+        isRunning.clear()
+        
+        #wait for threads to join
+        for t in workers:
+            t.join()
+            
         logging.warn('Stopped.')
 
 

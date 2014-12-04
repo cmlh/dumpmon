@@ -14,6 +14,13 @@ class PastiePaste(Paste):
         self.headers = None
         self.url = 'http://pastie.org/pastes/' + self.id + '/text'
 
+    def get(self):
+        try:
+            self.text =  BeautifulSoup(helper.curl(self.url)).pre.text
+        except Exception as e:
+            logging.error('[!] Beautiful Soup Error: %s'%(str(e)))
+            self.text =  None
+
 class Pastie(Site):
     def __init__(self):
         self.BASE_URL = 'http://pastie.org'
@@ -37,9 +44,3 @@ class Pastie(Site):
                 self.put(paste)
         logging.info('Pastie Added URLs: ' + str(i))
 
-    def get_paste_text(self, paste):
-        try:
-            return BeautifulSoup(helper.curl(paste.url)).pre.text
-        except Exception as e:
-            logging.error('[!] Beautiful Soup Error: %s'%(str(e)))
-            return None

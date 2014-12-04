@@ -13,6 +13,9 @@ class SlexyPaste(Paste):
         super(SlexyPaste, self).__init__(id)
         self.headers = {'Referer': 'http://slexy.org/view/' + self.id}
         self.url = 'http://slexy.org/raw/' + self.id
+        
+    def get(self):
+        self.text = helper.curl(self.url, self.headers['Referer'])
 
 class Slexy(Site):
     def __init__(self):
@@ -37,5 +40,4 @@ class Slexy(Site):
                 self.put(paste)
         logging.info('Slexy Added URLs: ' + str(i))
 
-    def get_paste_text(self, paste):
-        return helper.curl(paste.url, paste.headers['Referer'])
+

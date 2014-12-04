@@ -18,6 +18,7 @@ def createThread(target,*args,**kwargs):
      t = threading.Thread(target=target, args=args, kwargs=kwargs)         
      t.daemon = True
      t.start()
+     return t
              
 def curl (url,referer=None):
     try:
@@ -78,7 +79,7 @@ def build_tweet(paste):
     '''
     tweet = None
     if paste.match():
-        logging.info('Paste Matched')
+        logging.debug('Paste Matched')
         tweet = paste.url
         if paste.type == 'db_dump':
             if paste.num_emails > 0:

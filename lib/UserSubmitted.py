@@ -15,6 +15,9 @@ class UserSubmittedPaste(Paste):
         self.url = resolve(url)
         logging.info('[+] URL expanded to %s'%(self.url))
 
+    def get(self):
+        self.text =  helper.curl(self.url)
+
 class UserSubmitted(Site):
     def __init__(self):
         super(UserSubmitted, self).__init__()
@@ -33,23 +36,13 @@ class UserSubmitted(Site):
         if not self.empty():
             paste = self.get()
             logging.info('[*] Checking ' + paste.url)
-            paste.text = self.get_paste_text(paste)
+            paste.get()
             tweet = helper.build_tweet(paste)
             if tweet:
                 logging.info(tweet)
                 with bot.tweetLock:
                     if USE_DB:
-                        self.db_client.save({
-                            'pid' : paste.id,
-                            'text' : paste.text,
-                            'emails' : paste.emails,
-                            'hashes' : paste.hashes,
-                            'num_emails' : paste.num_emails,
-                            'num_hashes' : paste.num_hashes,
-                            'type' : paste.type,
-                            'db_keywords' : paste.db_keywords,
-                            'url' : paste.url
-                           })
+                        self.db_client.save(repr(paste))
                     try:
                         logging.debug('[+] Tweet %s'%(tweet))
                         bot.statuses.update(status=tweet)
@@ -58,5 +51,3 @@ class UserSubmitted(Site):
                         logging.debug('[!] TwitterError %s'%(str(e)))
 
            
-    def get_paste_text(self, paste):
-        return helper.curl(paste.url)

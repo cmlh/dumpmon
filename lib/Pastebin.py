@@ -13,8 +13,14 @@ class PastebinPaste(Paste):
         super(PastebinPaste, self).__init__(id)
         self.headers = None
         self.url = 'http://pastebin.com/raw.php?i=' + self.id
+    
+    def get(self):
+        self.text = helper.curl(self.url)
 
 class Pastebin(Site):
+    """
+    Pastebin will block your IP if you request more than 600 requests in 10 mins. This is per admin@pastebin.com
+    """
     def __init__(self):
         self.BASE_URL = 'http://pastebin.com'
         self.sleep = SLEEP_PASTEBIN
@@ -37,5 +43,3 @@ class Pastebin(Site):
                 self.put(paste)
         logging.info('Pastebin Added URLs: ' + str(i))
            
-    def get_paste_text(self, paste):
-        return helper.curl(paste.url)
