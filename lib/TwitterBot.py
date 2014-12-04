@@ -90,30 +90,32 @@ class TwitterBot(Twitter):
             except Exception as e:
                 logging.error('[!] Error trying to add followers: %s '%(str(e)))          
                 
-    def monitor(self):
+    def monitor(self, isRunning):
         """
         This function is expected to be on a separate thread.
         This stream function is blocking and will not yield, thus does not need to be in a loop; refer to the docs
         """
         twitter_userstream = TwitterStream(auth=self.auth, domain='userstream.twitter.com')
-        try:
-            for msg in twitter_userstream.user():
-                #logging.debug("{^} %s"%(msg))
-                self.auto_follow_followers()
-                if 'text' in msg:
-                    print("[$] Recieved Tweet %s from %s"%(msg['text'],msg['user']['screen_name']))
-                
-                #process DMs, but only from other people     
-                if 'direct_message' in msg and msg['direct_message']['sender']['screen_name'] != TWITTER_SCREEN_NAME:
-                    self._parseTweet(msg['direct_message'],msg)
-                
-                if 'event' in msg:
-                    logging.debug("{^} %s"%(msg))
+        
+        while isRunning.is_set():
+            try:
+                for msg in twitter_userstream.user():
+                    #logging.debug("{^} %s"%(msg))
+                    self.auto_follow_followers()
+                    if 'text' in msg:
+                        print("[$] Recieved Tweet %s from %s"%(msg['text'],msg['user']['screen_name']))
                     
-        except StopIteration:
-            print("stopping iteration")
-        except TwitterError as e:
-            logging.error('[!] TwitterError %s'%(str(e)))
+                    #process DMs, but only from other people     
+                    if 'direct_message' in msg and msg['direct_message']['sender']['screen_name'] != TWITTER_SCREEN_NAME:
+                        self._parseTweet(msg['direct_message'],msg)
+                    
+                    if 'event' in msg:
+                        logging.debug("{^} %s"%(msg))
+                        
+            except StopIteration:
+                print("stopping iteration")
+            except TwitterError as e:
+                logging.error('[!] TwitterError %s'%(str(e)))
             
             
             
