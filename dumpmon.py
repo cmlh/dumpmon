@@ -61,8 +61,8 @@ def monitor():
     #array to keep a handle on threads    
     workers = []         
     createThread(bot.monitor)
-    createThread(Stats().monitor,bot)
-    workers.append(createThread(HaveIBeen().monitor,bot,isRunning))
+    #createThread(Stats().monitor,bot)
+    #workers.append(createThread(HaveIBeen().monitor,bot,isRunning))
     #workers.append(createThread(Pastebin().monitor,bot,isRunning))
     #workers.append(createThread(Slexy().monitor,bot,isRunning))
     #workers.append(createThread(Pastie().monitor,bot,isRunning))
