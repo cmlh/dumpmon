@@ -32,7 +32,7 @@ class UserSubmitted(Site):
             logging.info('Adding User Sumbmitted URL: ' + paste.url)
             self.put(paste)
 
-    def monitor(self, bot):
+    def monitor(self, bot,isRunning):
         if not self.empty():
             paste = self.get()
             logging.info('[*] Checking ' + paste.url)

@@ -59,8 +59,8 @@ class Stats(object):
             logging.error('[!] Database Error %s'%(e))
             return None
                                                       
-    def monitor(self,twitterBot):
-        while(True):
+    def monitor(self,twitterBot,isRunning):
+        while(isRunning.is_set()):
             try:
                 msg = self.status()
                 if msg:
