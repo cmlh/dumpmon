@@ -41,7 +41,7 @@ def monitor():
         level = logging.DEBUG
     
     logging.basicConfig(
-        format='%(asctime)s [%(levelname)s]    [%(module)s]    [%(funcName)s]    %(message)s', filename=log_file, level=level)
+        format='%(asctime)s [%(levelname)s][%(module)s][%(funcName)s] %(message)s', filename=log_file, level=level)
     
     handler = RotatingFileHandler(log_file, maxBytes=20*1000,
                                   backupCount=5)
@@ -60,7 +60,7 @@ def monitor():
     isRunning.set()
     #array to keep a handle on threads    
     workers = []         
-    workers.append(createThread(bot.monitor,isRunning))
+    createThread(bot.monitor)
     workers.append(createThread(Stats().monitor,bot,isRunning))
     workers.append(createThread(HaveIBeen().monitor,bot,isRunning))
     #workers.append(createThread(Pastebin().monitor,bot,isRunning))

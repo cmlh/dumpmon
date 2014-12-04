@@ -96,26 +96,25 @@ class TwitterBot(Twitter):
         This stream function is blocking and will not yield, thus does not need to be in a loop; refer to the docs
         """
         twitter_userstream = TwitterStream(auth=self.auth, domain='userstream.twitter.com')
-        
-        while isRunning.is_set():
-            try:
-                for msg in twitter_userstream.user():
-                    #logging.debug("{^} %s"%(msg))
-                    self.auto_follow_followers()
-                    if 'text' in msg:
-                        print("[$] Recieved Tweet %s from %s"%(msg['text'],msg['user']['screen_name']))
+
+        try:
+            for msg in twitter_userstream.user():
+                #logging.debug("{^} %s"%(msg))
+                self.auto_follow_followers()
+                if 'text' in msg:
+                    print("[$] Recieved Tweet %s from %s"%(msg['text'],msg['user']['screen_name']))
+                
+                #process DMs, but only from other people     
+                if 'direct_message' in msg and msg['direct_message']['sender']['screen_name'] != TWITTER_SCREEN_NAME:
+                    self._parseTweet(msg['direct_message'],msg)
+                
+                if 'event' in msg:
+                    logging.debug("{^} %s"%(msg))
                     
-                    #process DMs, but only from other people     
-                    if 'direct_message' in msg and msg['direct_message']['sender']['screen_name'] != TWITTER_SCREEN_NAME:
-                        self._parseTweet(msg['direct_message'],msg)
-                    
-                    if 'event' in msg:
-                        logging.debug("{^} %s"%(msg))
-                        
-            except StopIteration:
-                print("stopping iteration")
-            except TwitterError as e:
-                logging.error('[!] TwitterError %s'%(str(e)))
+        except StopIteration:
+            print("stopping iteration")
+        except TwitterError as e:
+            logging.error('[!] TwitterError %s'%(str(e)))
             
             
             
