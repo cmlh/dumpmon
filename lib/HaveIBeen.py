@@ -22,7 +22,7 @@ class HaveIBeenPaste(Paste):
         self.url = 'http://pastebin.com/raw.php?i=' + self.id
         
     def get(self):
-        return helper.curl(self.url)
+        self.text =  helper.curl(self.url)
         
 class HaveIBeen(Site):
     def __init__(self):
