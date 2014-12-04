@@ -32,8 +32,15 @@ def curl (url,referer=None):
         c.perform()
         rc = c.getinfo(c.RESPONSE_CODE)
         c.close()   
+        
+        #TODO: need to figure out a back off scenario
+        if rc == 403:
+            logging.error('[!] %s Response code: %d'%(url,rc))
+            return "backoff"
+        
         if rc != 200:
             logging.error('[!] %s Response code: %d'%(url,rc))
+            
         return buffer.getvalue()    
     except Exception as e:
         logging.error('[!] Curl Error: %s'%(str(e)))

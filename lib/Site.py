@@ -8,6 +8,7 @@ from twitter import TwitterError
 from settings import USE_DB, DB_HOST, DB_PORT, SEEN_DEQUE_LEN
 import logging
 import helper
+from random import randint
 
 from collections import deque
 
@@ -102,7 +103,7 @@ class Site(object):
         while(1):
             while not self.empty():
                 #need to sleep to avoid the ban....
-                time.sleep(2)
+                time.sleep(randint(5,17))
                 paste = self.get()
                 logging.info('[*] Checking ' + paste.url)
                 paste.text = self.get_paste_text(paste)
