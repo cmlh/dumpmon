@@ -80,7 +80,8 @@ class TwitterBot(Twitter):
     
         following = set(self.friends.ids(screen_name=TWITTER_SCREEN_NAME)["ids"])
         followers = set(self.followers.ids(screen_name=TWITTER_SCREEN_NAME)["ids"])
-    
+        for f in followers:
+            print f
         not_following_back = followers - following
     
         for user_id in not_following_back:
@@ -96,11 +97,10 @@ class TwitterBot(Twitter):
         This stream function is blocking and will not yield, thus does not need to be in a loop; refer to the docs
         """
         twitter_userstream = TwitterStream(auth=self.auth, domain='userstream.twitter.com')
-
+        self.auto_follow_followers()
         try:
             for msg in twitter_userstream.user():
                 #logging.debug("{^} %s"%(msg))
-                self.auto_follow_followers()
                 if 'text' in msg:
                     print("[$] Recieved Tweet %s from %s"%(msg['text'],msg['user']['screen_name']))
                 
