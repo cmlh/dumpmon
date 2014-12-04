@@ -111,7 +111,7 @@ class Site(object):
                     with bot.tweetLock:
                         if USE_DB:
                             try:
-                                self.db_client.save(paste.row)
+                                self.db_client.save(paste.row())
                             except Exception as e:
                                 logging.error('[!] MongoDB Error %s'%(str(e)))
                         try:
