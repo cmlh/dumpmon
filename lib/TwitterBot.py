@@ -23,6 +23,13 @@ class TwitterBot(Twitter):
         self.userSubmittedSite = UserSubmitted()
         logging.info('[+] Started TwitterBot')
     
+    def pwn3d(self,aryDM,user):
+        i = self.statusMgr.cacheEmail.find_one({'_id':aryDM[1]})
+        if i:
+            return "Yes, I was able to find %s email %d times in data leaks."%(i['_id'],int(i['value']))
+        else:
+            return "No, I haven't found %s email yet in data breaches."%(aryDM[1])
+        
     def check(self,aryDM,user):
         self.userSubmittedSite.update(aryDM[1])
         response = self.userSubmittedSite.monitor(self)
@@ -71,19 +78,17 @@ class TwitterBot(Twitter):
                     except TwitterError as e:
                         logging.debug('[!] TwitterError %s'%(str(e)))
         except Exception as e:
-            logging.error('[!] Error trying to parse DM: %s '%(aryDM))
+            logging.error('[!] Error trying to parse DM: %s  %s'%(aryDM,str(e)))
     
     def auto_follow_followers(self):
         """
             Follows back everyone who's followed you
         """
-    
         following = set(self.friends.ids(screen_name=TWITTER_SCREEN_NAME)["ids"])
         followers = set(self.followers.ids(screen_name=TWITTER_SCREEN_NAME)["ids"])
-        for f in followers:
-            print f
+
         not_following_back = followers - following
-    
+
         for user_id in not_following_back:
             try:
                 self.friendships.create(user_id=user_id, follow=True)
@@ -99,8 +104,7 @@ class TwitterBot(Twitter):
         twitter_userstream = TwitterStream(auth=self.auth, domain='userstream.twitter.com')
         self.auto_follow_followers()
         try:
-            for msg in twitter_userstream.user():
-                #logging.debug("{^} %s"%(msg))
+            for msg in twitter_userstream.user():             
                 if 'text' in msg:
                     print("[$] Recieved Tweet %s from %s"%(msg['text'],msg['user']['screen_name']))
                 
@@ -108,8 +112,8 @@ class TwitterBot(Twitter):
                 if 'direct_message' in msg and msg['direct_message']['sender']['screen_name'] != TWITTER_SCREEN_NAME:
                     self._parseTweet(msg['direct_message'],msg)
                 
-                if 'event' in msg:
-                    logging.debug("{^} %s"%(msg))
+                if 'source' in msg and 'follow_request_sent' in msg['source']:
+                    self.auto_follow_followers()
                     
         except StopIteration:
             print("stopping iteration")

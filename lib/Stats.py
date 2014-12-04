@@ -14,6 +14,8 @@ class Stats(object):
             except pymongo.errors.ConnectionFailure, e:
                 logging.error('[!] Database failed to start %s'%(e))
                 
+        self.cacheEmail = self.uniqueEmailSet()
+                
     def uniqueEmailSet(self):
             map = Code("function () {"
                        " this.emails.forEach(function(z) {"
@@ -53,6 +55,8 @@ class Stats(object):
         try:
             e = self.uniqueEmailSet().count()
             h = self.uniqueHashSet().count()
+            self.cacheEmail = self.uniqueEmailSet()
+            
             msg =  "Status as of %s: \n Unique emails: %i, Unique hashes: %i\n #infosec #dataleak"%(time.strftime("%c"),e,h)    
             return msg
         except Exception,e:
