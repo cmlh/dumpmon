@@ -101,9 +101,8 @@ class Site(object):
         self.update()
         while isRunning.is_set():
             while not self.empty():
-                if not isRunning.is_set(): return
                 #need to sleep to avoid the ban....
-                time.sleep(randint(5,17))
+                time.sleep(randint(2,5))
                 paste = self.get()
                 paste.get()
                 tweet = helper.build_tweet(paste)
@@ -122,7 +121,6 @@ class Site(object):
                             logging.error('[!] TwitterError %s'%(str(e)))
             self.update()
             while self.empty():
-                if not isRunning.is_set(): return
                 logging.debug('[*] No results... sleeping')
                 time.sleep(self.sleep)
                 self.update()
