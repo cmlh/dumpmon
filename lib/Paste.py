@@ -39,10 +39,11 @@ class Paste(object):
         # Get the amount of emails
         try:
             r = self.text.splitlines()
+            logging.debug("[*] Num Lines in text: %i"%(len(r)))
         except Exception as e:
             logging.debug("[!] Error: %s"%(str(e)))
             
-        logging.debug("[*] Num Lines in text: %i"%(len(r)))
+
         if regexes['email'].search(self.text):
             self.emails = regexes['email'].findall(self.text)
             
