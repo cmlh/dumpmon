@@ -23,7 +23,7 @@ class Paste(object):
         #logging.info('id %s compares to %s'%(self.id, comparePaste.id))
         return self.id == comparePaste.id
     
-    def __repr__(self):
+    def row(self):
         return {
                 'pid' : self.id,
                 'text' : self.text,

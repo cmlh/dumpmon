@@ -101,6 +101,7 @@ class Site(object):
         self.update()
         while isRunning.is_set():
             while not self.empty():
+                if not isRunning.is_set(): return
                 #need to sleep to avoid the ban....
                 time.sleep(randint(5,17))
                 paste = self.get()
@@ -111,7 +112,7 @@ class Site(object):
                     with bot.tweetLock:
                         if USE_DB:
                             try:
-                                self.db_client.save(repr(paste))
+                                self.db_client.save(paste.row)
                             except Exception as e:
                                 logging.error('[!] MongoDB Error %s'%(str(e)))
                         try:
@@ -121,6 +122,7 @@ class Site(object):
                             logging.error('[!] TwitterError %s'%(str(e)))
             self.update()
             while self.empty():
+                if not isRunning.is_set(): return
                 logging.debug('[*] No results... sleeping')
                 time.sleep(self.sleep)
                 self.update()
