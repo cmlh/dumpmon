@@ -2,6 +2,7 @@ from .regexes import regexes
 import settings
 import logging
 import re
+import time
 
 class Paste(object):
     def __init__(self,id):
@@ -33,7 +34,8 @@ class Paste(object):
                 'num_hashes' : self.num_hashes,
                 'type' : self.type,
                 'db_keywords' : self.db_keywords,
-                'url' : self.url
+                'url' : self.url,
+                "added":time.strftime("%c")
                }
     
     def get(self):

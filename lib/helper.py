@@ -27,6 +27,9 @@ def curl (url,referer=None):
         c.setopt(c.URL, url)
         c.setopt(c.WRITEDATA, buffer)
         
+        # Follow redirect.
+        c.setopt(c.FOLLOWLOCATION, True)
+        
         if referer:
             c.setopt(c.REFERER, referer)
         

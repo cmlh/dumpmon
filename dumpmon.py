@@ -58,10 +58,15 @@ def monitor():
     #create an event to tell threads to keep running
     isRunning = threading.Event()
     isRunning.set()
+    
     #array to keep a handle on threads    
     workers = []         
+    
+    #these next 2 workers don't need to be joined when termd
     createThread(bot.monitor)
     createThread(Stats().monitor,bot)
+    
+    #these workers need to be shut down gracefully
     workers.append(createThread(HaveIBeen().monitor,bot,isRunning))
     workers.append(createThread(Pastebin().monitor,bot,isRunning))
     workers.append(createThread(Slexy().monitor,bot,isRunning))

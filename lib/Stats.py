@@ -14,7 +14,7 @@ class Stats(object):
             except pymongo.errors.ConnectionFailure, e:
                 logging.error('[!] Database failed to start %s'%(e))
                 
-        self.cacheEmail = self.uniqueEmailSet()
+            self.cacheEmail = self.uniqueEmailSet()
                 
     def uniqueEmailSet(self):
             map = Code("function () {"
