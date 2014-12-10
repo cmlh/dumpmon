@@ -26,7 +26,11 @@ class Pastebin(Site):
         self.sleep = SLEEP_PASTEBIN
         super(Pastebin, self).__init__()
         logging.info('[+] Started PasteBin')
-        
+    
+    def terminating(self):
+        #TODO: persist the seen queue
+        pass    
+    
     def parse(self):
         return BeautifulSoup(helper.curl(self.BASE_URL + '/archive')).find_all(
             lambda tag: tag.name == 'td' and tag.a and '/archive/' not in tag.a['href'] and tag.a['href'][1:])        
