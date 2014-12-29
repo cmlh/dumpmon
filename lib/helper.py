@@ -45,9 +45,13 @@ def curl (url,referer=None):
         if rc != 200:
             logging.error('[!] %s Response code: %d'%(url,rc))
             
-        return buffer.getvalue()    
+        r =  buffer.getvalue()    
+        #sometimes the buffer is None
+        return r if r else "no html could be returned"
+    
     except Exception as e:
         logging.error('[!] Curl Error: %s'%(str(e)))
+        return "error"
 
 def download(url, headers=None):
     if not headers:
