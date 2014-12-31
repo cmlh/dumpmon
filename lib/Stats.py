@@ -13,8 +13,9 @@ class Stats(object):
                 self.client = MongoClient(DB_HOST, DB_PORT).paste_db.pastes        
             except pymongo.errors.ConnectionFailure, e:
                 logging.error('[!] Database failed to start %s'%(e))
-                
-            self.cacheEmail = self.uniqueEmailSet()
+            #commenting this cache call out; taking too much time at start up.    
+            #self.cacheEmail = self.uniqueEmailSet()
+            self.cacheEmail = None
                 
     def uniqueEmailSet(self):
             map = Code("function () {"
