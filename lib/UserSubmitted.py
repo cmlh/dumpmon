@@ -13,7 +13,7 @@ class UserSubmittedPaste(Paste):
         super(UserSubmittedPaste, self).__init__(url)
         self.headers = None
         self.url = resolve(url)
-        logging.info('[+] URL expanded to %s'%(self.url))
+        logging.debug('[+] URL expanded to %s'%(self.url))
 
     def get(self):
         self.text =  helper.curl(self.url)
@@ -29,17 +29,17 @@ class UserSubmitted(Site):
     def update(self,url):
         paste = UserSubmittedPaste(url)
         if not self.hasSeen(paste):
-            logging.info('Adding User Sumbmitted URL: ' + paste.url)
+            logging.debug('Adding User Sumbmitted URL: ' + paste.url)
             self.put(paste)
 
     def monitor(self, bot):
         if not self.empty():
             paste = self.get()
-            logging.info('[*] Checking ' + paste.url)
+            logging.debug('[*] Checking ' + paste.url)
             paste.get()
             tweet = helper.build_tweet(paste)
             if tweet:
-                logging.info(tweet)
+                logging.debug(tweet)
                 with bot.tweetLock:
                     if USE_DB:
                         self.db_client.save(repr(paste))

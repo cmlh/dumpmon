@@ -37,7 +37,7 @@ class Pastebin(Site):
         
     def update(self):
         '''update(self) - Fill Queue with new Pastebin IDs'''
-        logging.info('Retrieving Pastebin ID\'s')
+        logging.debug('Retrieving Pastebin ID\'s')
         i=0            
         for entry in self.parse():
             paste = PastebinPaste(entry.a['href'][1:])
@@ -45,5 +45,5 @@ class Pastebin(Site):
                 #logging.info('Adding URL: ' + paste.url)
                 i+=1
                 self.put(paste)
-        logging.info('Pastebin Added URLs: ' + str(i))
+        logging.debug('Pastebin Added URLs: ' + str(i))
            

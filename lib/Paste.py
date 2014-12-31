@@ -116,5 +116,5 @@ class Paste(object):
             return self.type
         
         except Exception as e:
-            logging.debug("[!] Error: %s"%(str(e)))
+            logging.error("[!] Error: %s"%(str(e)))
             return None

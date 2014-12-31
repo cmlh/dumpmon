@@ -30,7 +30,7 @@ class Slexy(Site):
         
     def update(self):
         '''update(self) - Fill Queue with new Slexy IDs'''
-        logging.info('[*] Retrieving Slexy ID\'s')
+        logging.debug('[*] Retrieving Slexy ID\'s')
 
         i=0   
         for entry in self.parse():
@@ -38,6 +38,6 @@ class Slexy(Site):
             if not self.hasSeen(paste):
                 i+=1
                 self.put(paste)
-        logging.info('Slexy Added URLs: ' + str(i))
+        logging.debug('Slexy Added URLs: ' + str(i))
 
 

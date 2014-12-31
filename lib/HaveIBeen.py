@@ -40,7 +40,7 @@ class HaveIBeen(Site):
             return None
         
     def update(self):
-        logging.info('Retrieving HaveIBeenPwned ID\'s')
+        logging.debug('Retrieving HaveIBeenPwned ID\'s')
         i=0 
         
         for entry in self._parse():
@@ -50,7 +50,7 @@ class HaveIBeen(Site):
             if not self.hasSeen(paste):
                 i+=1
                 self.put(paste)
-        logging.info('HaveIBeenPwned Added URLs: ' + str(i))
+        logging.debug('HaveIBeenPwned Added URLs: ' + str(i))
 
            
 

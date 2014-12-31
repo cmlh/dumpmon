@@ -34,7 +34,7 @@ class Pastie(Site):
 
     def update(self):
         '''update(self) - Fill Queue with new Pastie IDs'''
-        logging.info('Retrieving Pastie ID\'s')
+        logging.debug('Retrieving Pastie ID\'s')
         i=0    
         for entry in self.parse():
             paste = PastiePaste(entry.a['href'].replace(
@@ -42,5 +42,5 @@ class Pastie(Site):
             if not self.hasSeen(paste):
                 i+=1
                 self.put(paste)
-        logging.info('Pastie Added URLs: ' + str(i))
+        logging.debug('Pastie Added URLs: ' + str(i))
 
